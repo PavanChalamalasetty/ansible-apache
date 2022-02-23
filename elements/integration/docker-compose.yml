@@ -1,0 +1,41 @@
+---
+version: '3'
+
+services:
+  dd_rhel8_template:
+    build:
+      context: ./config
+      dockerfile: Dockerfile.rhel8
+      args:
+        - PROJECT_NAME=$PROJECT_NAME
+    container_name: rhel8-${PROJECT_NAME}-${BRANCH_NAME}
+    environment:
+      container: docker
+    privileged: true
+    cap_add:
+      - SYS_ADMIN
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - ../../.:/ansible/playbooks/roles/$PROJECT_NAME
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+
+  dd_rhel7_template:
+    build:
+      context: ./config
+      dockerfile: Dockerfile.rhel7
+      args:
+        - PROJECT_NAME=$PROJECT_NAME
+    container_name: rhel7-${PROJECT_NAME}-${BRANCH_NAME}
+    environment:
+      container: docker
+    privileged: true
+    cap_add:
+      - SYS_ADMIN
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - ../../.:/ansible/playbooks/roles/$PROJECT_NAME
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro

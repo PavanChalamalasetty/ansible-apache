@@ -1,0 +1,37 @@
+---
+- name: 'Set up the Apache users and permissions'
+  include_tasks: users.yml
+  tags:
+    - httpd
+
+- name: 'Set up webpush user'
+  include_tasks: webpush.yml
+  tags:
+    - never
+    - webpush
+
+- name: 'Set up the Apache directory structure'
+  include_tasks: directories.yml
+  tags:
+    - httpd
+
+- name: 'Set up the Apache keys and certs'
+  include_tasks: ssl.yml
+  tags:
+    - httpd
+
+- name: 'Set up the Oracle Middleware Fusion wallet (cwallet)'
+  include_tasks: cwallet.yml
+  tags:
+    - httpd
+
+- name: 'Set the Apache ulimits'
+  include_tasks: limits.yml
+  tags:
+    - httpd
+
+- name: 'Verify WebLogic Proxy directories'
+  include_tasks: wlproxy.yml
+  tags:
+    - httpd
+    - wlproxy

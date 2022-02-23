@@ -1,0 +1,36 @@
+FROM xxx:21.3
+ARG PROJECT_NAME
+
+RUN if [ $(command -v dnf-3) ]; then dnf makecache \
+      && dnf config-manager --set-disabled Default_Organization* \
+      && sed -i 's/plugins=0/plugins=1/g' /etc/yum.conf \
+      && dnf clean all \
+      && dnf --assumeyes install python36 sudo bash rsyslog cronie wget ksh ansible; \
+    elif [ $(command -v yum) ]; then yum makecache fast \
+      && yum-config-manager --disable Default_Organization* \
+      && OS_RELEASE=$(awk '{match($0, /[0-9]+/,version)}END{print version[0]}' /etc/system-release) \
+      && yum-config-manager \
+        --enable Default_Organization_Delta_Dental_Internal_Tools_Delta_Dental_Custom_RHEL_${OS_RELEASE}_Server_RPMs_x86_64 \
+        --enable rhel-* \ 
+      && sed -i 's/plugins=0/plugins=1/g' /etc/yum.conf \
+      && yum clean all \
+      && yum install -y python sudo yum-plugin-ovl bash rsyslog cronie ksh ca-certificates wget ksh ansible; \
+    fi
+####
+RUN yum -y swap -- remove fakesystemd -- install systemd systemd-libs
+RUN echo "XXX" > /.designator
+
+ENV ANSIBLE_GATHERING smart
+ENV ANSIBLE_HOST_KEY_CHECKING false
+ENV ANSIBLE_RETRY_FILES_ENABLED false
+ENV ANSIBLE_ROLES_PATH /ansible/playbooks/roles
+ENV ANSIBLE_SSH_PIPELINING True
+ENV PYTHONPATH /ansible/lib
+ENV PATH /ansible/bin:$PATH
+ENV ANSIBLE_LIBRARY /ansible/library
+ENV PROJECT_NAME $PROJECT_NAME
+ 
+WORKDIR /ansible/playbooks
+
+VOLUME ["/sys/fs/cgroup"]
+CMD ["init"]

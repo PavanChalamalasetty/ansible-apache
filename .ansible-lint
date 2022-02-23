@@ -1,0 +1,11 @@
+---
+exclude_paths:
+  - /dd-common/
+  - /dd-ansible-role-common/
+skip_list:
+  - custom_facts
+  - ansible_local_inventory
+  - '601'
+  - '403'
+  - '305'
+  - '302'

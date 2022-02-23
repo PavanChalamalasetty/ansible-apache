@@ -1,0 +1,6 @@
+---
+webpush_home: '/opt/jail/webpush/htdocs'
+webpush_user: 'webpush'
+webpush_uid: '276'
+webpush_group: 'webpush'
+webpush_gid: '276'

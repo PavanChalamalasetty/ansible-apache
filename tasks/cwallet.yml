@@ -1,0 +1,36 @@
+---
+- name: 'Check if cwallet.sso is needed'
+  shell: |
+    set -o pipefail
+    ls -l /opt/oracle*/WLPlugins
+  changed_when: no
+  ignore_errors: yes
+  register: cwallet_exists
+  tags:
+    - httpd
+
+- name: 'Create the cwallet directory'
+  file:
+    path: "{{ apache_dir }}/conf/ssl/my-wallet"
+    owner: "{{ apache_user }}"
+    group: "{{ apache_group }}"
+    mode: '0755'
+    state: directory
+  when:
+    - cwallet_exists is defined
+    - cwallet_exists.stdout_lines|length > 0
+  tags:
+    - httpd
+
+- name: 'Copy cwallet file'
+  get_url:
+    url: "{{ artifactory_uri }}/{{ init_certs_artif_path }}/cwallet.sso"
+    dest: "{{ apache_dir }}/conf/ssl/my-wallet"
+    owner: "{{ apache_user }}"
+    group: "{{ apache_group }}"
+    mode: '0744'
+  when:
+    - cwallet_exists is defined
+    - cwallet_exists.stdout_lines|length > 0
+  tags:
+    - httpd

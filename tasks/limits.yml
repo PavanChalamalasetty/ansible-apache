@@ -1,0 +1,18 @@
+---
+- name: 'Set hard limit for Apache'
+  pam_limits:
+    domain: "{{ apache_user }}"
+    limit_item: nproc
+    limit_type: hard
+    value: '32768'
+  tags:
+    - httpd
+
+- name: 'Set soft limit for Apache'
+  pam_limits:
+    domain: "{{ apache_user }}"
+    limit_item: nproc
+    limit_type: soft
+    value: '32768'
+  tags:
+    - httpd

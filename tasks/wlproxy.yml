@@ -1,0 +1,22 @@
+---
+- name: 'Check if _wl_proxy exists'
+  stat:
+    path: '/opt/apache/logs/_wl_proxy'
+  register: wl_proxy_exists
+  tags:
+    - httpd
+    - wl_proxy
+
+- name: 'Verify permissions of _wl_proxy'
+  file:
+    path: '/opt/apache/logs/_wl_proxy'
+    owner: "{{ apache_user }}"
+    group: "{{ apache_group }}"
+    mode: '0755'
+    state: directory
+  when:
+    - wl_proxy_exists is defined
+    - wl_proxy_exists['stat']['exists'] != false
+  tags:
+    - httpd
+    - wl_proxy

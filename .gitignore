@@ -1,0 +1,47 @@
+# build products...
+*.py[co]
+build
+
+# Backup files...
+*~
+*.bak
+
+# Eclipse/PyDev stuff...
+.checkstyle
+.project
+.pydevproject
+.settings/
+.venv/
+
+# Mac OS X stuff...
+.DS_Store
+
+# Sublime stuff...
+*.sublime-project
+*.sublime-workspace
+
+# Ansible stuff...
+*.retry
+ansible.cfg
+
+# Test kitchen
+.kitchen/
+.kitchen.local.yml
+
+# Ruby
+.bundle/
+vendor/
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+#tests
+molecule/*/logs/*.txt
+elements/results/*.xml

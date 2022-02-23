@@ -1,0 +1,23 @@
+---
+- name: 'Set up the Apache directory'
+  file:
+    path: "{{ apache_dir }}"
+    owner: "{{ apache_user }}"
+    group: "{{ apache_group }}"
+    mode: '0755'
+    state: directory
+  tags:
+    - httpd
+
+- name: 'Set up the Apache SSL directory'
+  file:
+    path: "{{ apache_dir }}/{{ item }}"
+    owner: "{{ apache_user }}"
+    group: "{{ apache_group }}"
+    mode: '0755'
+    state: directory
+  with_items:
+    - conf
+    - conf/ssl
+  tags:
+    - httpd

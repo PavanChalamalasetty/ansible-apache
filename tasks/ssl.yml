@@ -1,0 +1,40 @@
+---
+- name: 'Copy the Apache key'
+  get_url:
+    url: "{{ artifactory_uri }}/{{ init_certs_artif_path }}/{{ apache_key }}"
+    dest: "{{ apache_dir }}/conf/ssl"
+    owner: "{{ apache_user }}"
+    group: "{{ apache_group }}"
+    mode: '0744'
+  tags:
+    - httpd
+
+- name: 'Copy the Apache cert'
+  get_url:
+    url: "{{ artifactory_uri }}/{{ init_certs_artif_path }}/{{ apache_cer }}"
+    dest: "{{ apache_dir }}/conf/ssl"
+    owner: "{{ apache_user }}"
+    group: "{{ apache_group }}"
+    mode: '0744'
+  tags:
+    - httpd
+
+- name: 'Create symlink for key'
+  file:
+    src: "{{ apache_dir }}/conf/ssl/{{ apache_key }}"
+    dest: "{{ apache_dir }}/conf/ssl/apache.key"
+    owner: "{{ apache_user }}"
+    group: "{{ apache_group }}"
+    state: link
+  tags:
+    - httpd
+
+- name: 'Create symlink for cert'
+  file:
+    src: "{{ apache_dir }}/conf/ssl/{{ apache_cer }}"
+    dest: "{{ apache_dir }}/conf/ssl/apache.cer"
+    owner: "{{ apache_user }}"
+    group: "{{ apache_group }}"
+    state: link
+  tags:
+    - httpd

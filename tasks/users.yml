@@ -1,0 +1,45 @@
+---
+- name: 'Create the Apache group'
+  group:
+    name: "{{ apache_group }}"
+    gid: 660
+    state: present
+
+- name: 'Create the Apache user'
+  user:
+    name: "{{ apache_user }}"
+    comment: 'Apache User'
+    group: "{{ apache_group }}"
+    uid: 650
+    shell: '/bin/bash'
+    home: '/home/apache2'
+    create_home: yes
+    append: yes
+    state: present
+  tags:
+    - httpd
+
+- name: 'Check for apachectl'
+  stat:
+    path: "{{ apache_ctl }}"
+  register: apachectl_exists
+  tags:
+    - httpd
+
+- name: 'Modify apachectl to prevent running as root'
+  shell: |
+    set -o pipefail
+    grep EUID "{{ apache_ctl }}"
+    if [ $? -ne 0 ]
+    then
+      if [ "`stat -c '%U' {{ apache_ctl }}`" != "root" ]
+      then
+        sed -i -- '2i if [ "$EUID" -eq 0 ]; then echo "cannot run as root"; exit 1; fi' "{{ apache_ctl }}"
+      fi
+    fi
+  changed_when: no
+  when:
+    - apachectl_exists is defined
+    - apachectl_exists['stat']['exists'] != false
+  tags:
+    - httpd

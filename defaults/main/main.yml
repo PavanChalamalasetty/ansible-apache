@@ -1,0 +1,13 @@
+---
+ansible_roles_path: '/opt/ansible/cache/local/roles'
+artifactory_uri: 'XXX'
+init_certs_artif_path: 'XXX'
+
+apache_dir: '/opt/apache'
+apache_ctl: '/opt/apache/bin/apachectl'
+apache_user: 'xxx'
+apache_group: 'yyy'
+
+# Certs may be overwritten by group_vars for prod, cloud
+apache_cer: 'xxx.cer'
+apache_key: 'xxx.key'
